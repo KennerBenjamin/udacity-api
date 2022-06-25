@@ -64,4 +64,4 @@ async def inference(input: InferenceInput):
                                    encoder=encoder,
                                    lb=lb)
     pred = ml.model.inference(model,X_inference)
-    return {"message":str(pred)}
+    return {"prediction":str(pred)}
