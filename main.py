@@ -7,7 +7,16 @@ from ml.data import process_data
 from ml.model import train_model
 from train_model import cat_features
 
+import os
+
+if "DYNO" in os.environ and os.path.isdir(".dvc"):
+    os.system("dvc config core.no_scm true")
+    if os.system("dvc pull") != 0:
+        exit("dvc pull failed")
+    os.system("rm -r .dvc .apt/usr/lib/dvc")
+
 app = FastAPI()
+
 
 class InferenceInput(BaseModel):
     age: int
@@ -50,6 +59,7 @@ class InferenceInput(BaseModel):
 async def greeting():
     return {"message": "Hello World"}
 
+
 @app.post("/inference/")
 async def inference(input: InferenceInput):
     X_inference = pd.Series(input.dict(by_alias=True)).to_frame().T
@@ -63,5 +73,5 @@ async def inference(input: InferenceInput):
                                    training=False,
                                    encoder=encoder,
                                    lb=lb)
-    pred = ml.model.inference(model,X_inference)
-    return {"prediction":str(pred)}
+    pred = ml.model.inference(model, X_inference)
+    return {"prediction": str(pred)}
