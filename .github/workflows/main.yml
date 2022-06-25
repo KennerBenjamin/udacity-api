@@ -28,6 +28,11 @@ jobs:
     - name: Install dependencies for testing
       run: |
         if [ -f requirements-test.txt ]; then pip install -r requirements-test.txt; fi
+    - name: DVC Setup
+      uses: iterative/setup-dvc@v1
+    - name: DVC Pull
+      run: |
+        dvc pull
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -45,12 +50,3 @@ jobs:
         aws-region: us-east-1
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      
-    - name: DVC Setup
-      uses: iterative/setup-dvc@v1
-      
-    - name: DVC Pull
-      run: |
-        dvc pull
-    
-    
