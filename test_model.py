@@ -1,10 +1,8 @@
 import numpy as np
-import pandas as pd
 import pytest
 from sklearn.datasets import make_classification
 from sklearn.ensemble import RandomForestClassifier
 
-from ml.data import process_data
 from ml.model import train_model, compute_model_metrics, inference
 
 cat_features = [
@@ -20,37 +18,30 @@ cat_features = [
 
 
 class data:
-    def __init__(self, X_train, y_train):
-        self.X_train = X_train
-        self.y_train = y_train
+    def __init__(self, X, y):
+        self.X = X
+        self.y = y
 
 
 @pytest.fixture
-def train_data():
-    df = pd.read_csv("census.csv")
-    X_train, y_train, *_ = process_data(
-        df, categorical_features=cat_features, label="salary", training=True
-    )
-    return data(X_train, y_train)
-
-
-@pytest.fixture
-def mock_model():
+def mock_train_data():
     X, y = make_classification(n_samples=1000, n_features=4,
                                n_informative=2, n_redundant=0,
                                random_state=0, shuffle=False)
+    return data(X, y)
+
+
+@pytest.fixture
+def mock_model(mock_train_data):
     clf = RandomForestClassifier(max_depth=2, random_state=0)
-    clf.fit(X, y)
+    clf.fit(mock_train_data.X, mock_train_data.y)
     return clf
 
 
-def test_train_model(train_data):
-    X_train = train_data.X_train
-    y_train = train_data.y_train
-    rfc = train_model(X_train, y_train)
-    rfc_mock = RandomForestClassifier()
-    assert type(rfc) == type(rfc_mock)
-    assert rfc is not rfc_mock
+def test_train_model(mock_train_data,mock_model):
+    rfc = train_model(mock_train_data.X, mock_train_data.y)
+    assert type(rfc) == type(mock_model)
+    assert rfc is not mock_model
 
 
 def test_compute_model_metrics():
@@ -70,7 +61,7 @@ def test_compute_model_metrics():
     assert different_fbeta == 0
 
 
-def test_inference(mock_model, train_data):
-    X = [[0, 0, 0, 0]]
-    pred = inference(mock_model, X)
-    assert len(pred) == len(X)
+def test_inference(mock_model, mock_train_data):
+    mock_train_data.X = [[0, 0, 0, 0]]
+    pred = inference(mock_model, mock_train_data.X)
+    assert len(pred) == len(mock_train_data.X)
