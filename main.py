@@ -5,7 +5,6 @@ import pandas as pd
 import ml.model
 from ml.data import process_data
 from ml.model import train_model
-from train_model import cat_features
 
 import os
 
@@ -16,6 +15,17 @@ if "DYNO" in os.environ and os.path.isdir(".dvc"):
     os.system("rm -r .dvc .apt/usr/lib/dvc")
 
 app = FastAPI()
+
+cat_features = [
+    "workclass",
+    "education",
+    "marital-status",
+    "occupation",
+    "relationship",
+    "race",
+    "sex",
+    "native-country",
+]
 
 
 class InferenceInput(BaseModel):
