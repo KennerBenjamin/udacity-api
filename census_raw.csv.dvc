@@ -1,4 +1,4 @@
-dvc daouts:
+outs:
 - md5: 109c3c826741a590001de91b594b05e3
   size: 3518605
   path: census_raw.csv

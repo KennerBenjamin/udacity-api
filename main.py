@@ -1,3 +1,5 @@
+import pickle
+
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 import pandas as pd
@@ -73,15 +75,12 @@ async def greeting():
 @app.post("/inference/")
 async def inference(input: InferenceInput):
     X_inference = pd.Series(input.dict(by_alias=True)).to_frame().T
-    train = pd.read_csv("census.csv")
-    X_train, y_train, encoder, lb = process_data(
-        train, categorical_features=cat_features, label="salary", training=True
-    )
-    model = train_model(X_train=X_train, y_train=y_train)
+    model = pickle.load(open('rfc_model.sav', 'rb'))
+    encoder = pickle.load(open('encoder.sav', 'rb'))
     X_inference, *_ = process_data(X_inference,
                                    categorical_features=cat_features,
                                    training=False,
-                                   encoder=encoder,
-                                   lb=lb)
+                                   encoder=encoder
+                                   )
     pred = ml.model.inference(model, X_inference)
     return {"prediction": str(pred)}
