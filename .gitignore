@@ -131,3 +131,4 @@ dmypy.json
 /census_raw.csv
 /rfc_model.sav
 /encoder.sav
+/lb.sav
