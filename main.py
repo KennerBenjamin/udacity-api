@@ -77,10 +77,12 @@ async def inference(input: InferenceInput):
     X_inference = pd.Series(input.dict(by_alias=True)).to_frame().T
     model = pickle.load(open('rfc_model.sav', 'rb'))
     encoder = pickle.load(open('encoder.sav', 'rb'))
+    lb = pickle.load(open('lb.sav', 'rb'))
     X_inference, *_ = process_data(X_inference,
                                    categorical_features=cat_features,
                                    training=False,
                                    encoder=encoder
                                    )
     pred = ml.model.inference(model, X_inference)
+    pred = lb.inverse_transform(pred)
     return {"prediction": str(pred)}
