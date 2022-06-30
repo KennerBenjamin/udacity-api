@@ -58,3 +58,5 @@ pickle.dump(model, open('rfc_model.sav', 'wb'))
 
 pickle.dump(encoder, open('encoder.sav', 'wb'))
 
+pickle.dump(lb, open('lb.sav', 'wb'))
+
