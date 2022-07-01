@@ -43,6 +43,16 @@ To meassure the models performance three different metrics where used.
 * recall = tp / (tp + fn)
 * fbeat(beta=1) = ((1+beta*beta)*(precision*recall))/(beta*beta*precision+recall)
 
+The performance of the model, tested on the validation data, was:
+
+* precision: 0.7428571428571429
+* recall: 0.6325639426076107
+* fbeta: 0.683288409703504
+
+For further results on fixed slices of the education feature see the [slice_output.txt](slice_output.txt) file.
+Use the [model_validation.py](model_validation.py) script to test the slice performance on other features.
+
+
 ## Ethical Considerations
 
 The data used for this model includes sensitive information about individuals and might be biased based on those features. Therefor the predictions made by this model have to be used carefully.
