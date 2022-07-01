@@ -48,10 +48,10 @@ def test_root():
 def test_low_salary():
     r = client.post("/inference/", json=low_salary_example)
     assert r.status_code == 200
-    assert r.json() == {"prediction": "[0]"}
+    assert r.json() == {"prediction": "['<=50K']"}
 
 
 def test_high_salary():
     r = client.post("/inference/", json=high_salary_example)
     assert r.status_code == 200
-    assert r.json() == {"prediction": "[1]"}
+    assert r.json() == {"prediction": "['>50K']"}
